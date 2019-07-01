@@ -1,3 +1,7 @@
+# Collr
+
+API for connected dog collars
+
 ## Running the application
 
 Create a file in `config/secrets.json`. In it, record your
@@ -7,6 +11,12 @@ Create a file in `config/secrets.json`. In it, record your
 * tableName
 * partitionKey
 * sortKey
+
+Run:
+
+```bash
+npm run start
+```
 
 ## Instructions
 
