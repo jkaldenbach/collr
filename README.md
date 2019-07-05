@@ -8,15 +8,34 @@ Create a file in `config/secrets.json`. In it, record your
 * awsAccessKeyId
 * awsSecretAccessKey
 * awsRegion
-* tableName
-* partitionKey
-* sortKey
 
 Run:
 
 ```bash
 npm run start
 ```
+
+To run the server in development mode, which causes restarts on file updates, use
+
+```bash
+npm run dev
+```
+
+## Testing
+
+Prior to testing, update the AWS credentials to point to the test or local DynamoDB instance. Then run:
+
+```bash
+npm run test
+```
+
+Service integration tests are located under `test/services`. Controllers are covered by end-to-end integration tests located under `test/routes`. Any model-specific unit tests should be stored in `test/models`.
+
+## Documentation
+
+JSDoc is used for documentation and to provide hints to IDEs. An HTML documenation page can be generated using the jsdoc package.
+
+
 
 ## Instructions
 
