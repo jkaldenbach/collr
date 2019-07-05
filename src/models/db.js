@@ -1,14 +1,20 @@
-const AWS = require("aws-sdk");
+const dynamoose = require("dynamoose");
 
 const secrets = require("../config/secrets");
 
-AWS.config.update({
+dynamoose.AWS.config.update({
   accessKeyId: secrets.awsAccessKeyId,
   secretAccessKey: secrets.awsSecretAccessKey,
   region: secrets.awsRegion
 });
 
+const ddb = new dynamoose.AWS.DynamoDB({
+  apiVersion: "2012-08-10",
+  sslEnabled: true
+});
+dynamoose.setDDB(ddb);
+
 module.exports = {
-  AWS,
-  ddb: new AWS.DynamoDB({ apiVersion: "2012-08-10", sslEnabled: true })
+  dynamoose,
+  ddb
 };

@@ -1,6 +1,6 @@
-const { ddb } = require("../models/db");
+const Event = require("../models/Event");
 
-const TABLE_NAME = "code-challenge-203";
+const TABLE_NAME = Event.getTableReq().TableName;
 
 /**
  * add a new event to the database
@@ -14,28 +14,7 @@ const TABLE_NAME = "code-challenge-203";
  * @return {Promise} DynamoDB putItem result
  */
 function createEvent(event) {
-  return ddb
-    .putItem({
-      TableName: TABLE_NAME,
-      Item: {
-        partitionKey: {
-          S: event.partitionKey
-        },
-        sortKey: {
-          S: event.sortKey
-        },
-        eventType: {
-          S: event.eventType
-        },
-        metadata: {
-          M: Object.entries(event.metadata).reduce((acc, [key, val]) => {
-            acc[key] = { S: val };
-            return acc;
-          }, {})
-        }
-      }
-    })
-    .promise();
+  return Event.create(event);
 }
 
 /**
@@ -46,15 +25,9 @@ function createEvent(event) {
  * @return {Promise} array of events
  */
 function getEventsByPartitionKey(partitionKey) {
-  return ddb
-    .scan({
-      TableName: TABLE_NAME,
-      ExpressionAttributeValues: {
-        ":a": { S: partitionKey }
-      },
-      FilterExpression: "partitionKey = :a"
-    })
-    .promise();
+  return Event.scan("partitionKey")
+    .eq(partitionKey)
+    .exec();
 }
 
 module.exports = {

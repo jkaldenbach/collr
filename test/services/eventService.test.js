@@ -1,4 +1,4 @@
-const { ddb } = require("../../src/models/db");
+const Event = require("../../src/models/Event");
 
 const eventService = require("../../src/services/eventService");
 
@@ -15,24 +15,13 @@ describe("eventService", () => {
         }
       };
       await eventService.createEvent(newEvent);
-      const createdEvent = await ddb
-        .getItem({
-          TableName: eventService.TABLE_NAME,
-          Key: {
-            partitionKey: { S: newEvent.partitionKey },
-            sortKey: { S: newEvent.sortKey }
-          }
-        })
-        .promise();
-      assert.equal(createdEvent.Item.eventType.S, newEvent.eventType);
-      assert.deepEqual(
-        createdEvent.Item.metadata.M.lat.S,
-        newEvent.metadata.lat
-      );
-      assert.deepEqual(
-        createdEvent.Item.metadata.M.long.S,
-        newEvent.metadata.long
-      );
+      const createdEvent = await Event.get({
+        partitionKey: newEvent.partitionKey,
+        sortKey: newEvent.sortKey
+      });
+      assert.equal(createdEvent.eventType, newEvent.eventType);
+      assert.deepEqual(createdEvent.metadata.lat, newEvent.metadata.lat);
+      assert.deepEqual(createdEvent.metadata.long, newEvent.metadata.long);
     });
   });
 
@@ -57,9 +46,9 @@ describe("eventService", () => {
         metadata: { lat: "1", long: "2" }
       });
       const events = await eventService.getEventsByPartitionKey("collar1");
-      assert.equal(events.Count, 2);
-      events.Items.forEach(event => {
-        assert(event.partitionKey.S, "collar1");
+      assert.equal(events.count, 2);
+      events.forEach(event => {
+        assert(event.partitionKey, "collar1");
       });
     });
   });
