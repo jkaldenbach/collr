@@ -10,5 +10,8 @@ module.exports = {
     expect: false,
     it: false,
     request: false
+  },
+  parserOptions: {
+    ecmaVersion: 2018
   }
 };
