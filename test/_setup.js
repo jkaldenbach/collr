@@ -2,17 +2,26 @@ const { assert } = require("chai");
 const request = require("supertest");
 
 const app = require("../src/app");
+const { ddb } = require("../src/models/db");
+const eventService = require("../src/services/eventService");
 
-before(() => {
-  // TODO: connect to database
-});
+beforeEach(async () => {
+  // delete all existing records
+  const events = await ddb
+    .scan({ TableName: eventService.TABLE_NAME })
+    .promise();
 
-beforeEach(() => {
-  // TODO: drop database
-});
-
-after(() => {
-  // TODO: disconnect from database
+  if (!events.Count) return;
+  const deleteBatch = events.Items.map(event => ({
+    DeleteRequest: {
+      Key: { partitionKey: event.partitionKey, sortKey: event.sortKey }
+    }
+  }));
+  await ddb
+    .batchWriteItem({
+      RequestItems: { [eventService.TABLE_NAME]: deleteBatch }
+    })
+    .promise();
 });
 
 global.assert = assert;
