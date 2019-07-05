@@ -5,13 +5,9 @@ const TABLE_NAME = Event.getTableReq().TableName;
 /**
  * add a new event to the database
  *
- * @param {Object} event - the event to be saved
- * @param {string} event.partitionKey - collar id
- * @param {string} event.sortKey - event id
- * @param {string} event.eventType - type of event ("activity"|"bark"|"location")
- * @param {object} event.metadata - extra data from the event. will be stored as strings
+ * @param {Event} event - the event to be saved
  *
- * @return {Promise} DynamoDB putItem result
+ * @return {Promise<Event>} the created event
  */
 function createEvent(event) {
   return Event.create(event);
@@ -22,7 +18,7 @@ function createEvent(event) {
  *
  * @param {string} partitionKey - id of the collar
  *
- * @return {Promise} array of events
+ * @return {Promise<Event[]>} array of events
  */
 function getEventsByPartitionKey(partitionKey) {
   return Event.scan("partitionKey")

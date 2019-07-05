@@ -1,3 +1,11 @@
+/**
+ * @typedef Event
+ * @property {string} partitionKey - collar id
+ * @property {string} sortKey - event id
+ * @property {string} eventType - type of event ("activity"|"bark"|"location")
+ * @property {object} metadata - extra data from the event. will be stored as strings
+ */
+
 const { dynamoose } = require("./db");
 
 const EVENT_TYPE = {
